@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 상태를 나타내는 Enum (열거형)
+enum Status {
+  SOLVED
+  ATTEMPTING
+  FAILED
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  username      String?         @unique
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  statuses UserProblemStatus[]
+}
+
+model Problem {
+  id            Int     @id @default(autoincrement())
+  title         String
+  link          String?
+  editorialLink String?
+
+  // 문제는 하나의 대회에 속할 수 있음
+  contestId Int
+  contest   Contest   @relation(fields: [contestId], references: [id])
+
+  order     Int
+
+  // 하나의 문제는 여러 유저의 '풀이 상태' 기록을 가짐
+  statuses UserProblemStatus[]
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // 셀프 참조를 위한 필드 (계층 구조)
+  // 최상위 카테고리는 부모가 -1
+  parentId Int?
+  parent   Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  children Category[] @relation("SubCategories")
+
+  // 카테고리는 여러 대회를 가짐
+  contests Contest[]
+  
+}
+
+model Contest {
+  id   Int      @id @default(autoincrement())
+  name String
+  date DateTime
+  
+  categoryId Int
+	category   Category @relation(fields: [categoryId], references: [id])
+
+  // 대회는 여러 문제를 가짐
+  problems Problem[]
+}
+
+// User와 Problem의 상태를 연결하는 중간 테이블 (핵심!)
+model UserProblemStatus {
+  userId    String
+  problemId Int
+  status    Status // SOLVED, ATTEMPTING, FAILED
+
+  user    User    @relation(fields: [userId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id])
+
+  // 한 유저가 한 문제에 대해 하나의 상태만 가질 수 있도록 복합 기본 키 설정
+  @@id([userId, problemId])
+}
+ 
+/* 앞에서 정의함
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  username      String?         @unique
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+*/
+ 
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     User?   @relation(fields: [userId], references: [id])
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+ 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id])
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  @@index([userId])
+}
+ 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
+}
+ 
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([userId, credentialID])
+}
