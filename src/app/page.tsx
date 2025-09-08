@@ -1,103 +1,47 @@
-import Image from "next/image";
 
-export default function Home() {
+"use client";
+
+import Navigator from "./components/Navigator";
+
+export default function HomePage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div style={{ fontFamily: 'Segoe UI, Arial, sans-serif', background: '#f5f7fa', minHeight: '100vh' }}>
+      <Navigator />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* 메인 소개 섹션 */}
+      <section style={{ background: '#e9ecef', margin: 24, borderRadius: 8, padding: '3rem 2rem 2rem 2rem', textAlign: 'left' }}>
+        <h1 style={{ fontSize: 64, fontWeight: 400, marginBottom: 16 }}>Checklist for OI Problems</h1>
+        <div style={{ fontSize: 22, color: '#495057', marginBottom: 16 }}>
+          A complete answer to the question, "How to excel at IOI-style contests?".
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <hr style={{ margin: '24px 0' }} />
+        <div style={{ color: '#343a40', fontSize: 16, marginBottom: 24 }}>
+          Hope this can help anyone preparing for future OIs.
+        </div>
+        <button style={{ background: '#007bff', color: '#fff', border: 'none', borderRadius: 4, padding: '10px 28px', fontSize: 18, cursor: 'pointer' }}>Learn more »</button>
+      </section>
+
+      {/* 3단 설명 섹션 */}
+      <section style={{ display: 'flex', justifyContent: 'space-around', margin: '48px 0 0 0', padding: '0 32px' }}>
+        <div style={{ maxWidth: 340 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 600, marginBottom: 8 }}>Keep track of OI problems</h2>
+          <div style={{ fontSize: 18, color: '#343a40' }}>
+            This checklist contains 1169 hard and interesting problems, with appropriate judge links given. You can keep track of your solved problems and get motivated to solve more.
+          </div>
+        </div>
+        <div style={{ maxWidth: 340 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 600, marginBottom: 8 }}>Pick the best suitable problem</h2>
+          <div style={{ fontSize: 18, color: '#343a40' }}>
+            By hovering on a problem you can see the number of perfect scorers on that problem in official contest, also, the percentage of points scored on that problem. Using those you can pick the best suitable problem for yourself!
+          </div>
+        </div>
+        <div style={{ maxWidth: 340 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 600, marginBottom: 8 }}>Keep track of others</h2>
+          <div style={{ fontSize: 18, color: '#343a40' }}>
+            You can share your checklist with your friends and they can share theirs too. Keep track of each other and solve more and more interesting problems together!
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
